@@ -133,9 +133,39 @@ Y.extend(MultiValueInput, Y.Plugin.Base,
 					this._host.set("value", "");
 					this._divContent.addClass("yui3-multivalueinput-border");
 				},this);
+				
+				this._host.on("keydown", this._keyDownHandler, this);
+				
 
 			},
 			destructor : function() {
+			},
+			
+			/**
+			 * Generate Markup for UL tag
+			 * @method _keyDownHandler
+			 * @protected
+			 * @param {Event} 
+			 */
+
+			_keyDownHandler:function(/* Event */ e){
+				var allList,lastItem, lastItemIndex;
+				if(e.keyCode !== 8){
+					return;
+				}
+				allList=this._ul.get("children");
+				lastItemIndex=allList.size()-2;
+				lastItem=allList.item(lastItemIndex);
+				if(!this._host.get("value")){
+					if(this._pendingDelete){
+						this._removeItem(lastItem, lastItemIndex);
+						this._pendingDelete = false;
+					}
+					else{
+						lastItem.addClass("yui3-multivalueinput-pendingdelete");
+  					    this._pendingDelete = true;
+					}
+				}
 			},
 			
 			/**
@@ -240,8 +270,8 @@ Y.extend(MultiValueInput, Y.Plugin.Base,
 			 * @return 
 			 */
 			
-			_removeItem : function(/* Node */selectedListNode) {
-				var index = this._getListIndex(selectedListNode);
+			_removeItem : function(/* Node */selectedListNode, /* int */ idx) {
+				var index = idx || this._getListIndex(selectedListNode);
 				this._host.focus();
 				selectedListNode.get("parentNode")
 						.removeChild(selectedListNode);
@@ -279,4 +309,3 @@ Y.extend(MultiValueInput, Y.Plugin.Base,
 		});
 
 Y.MultiValueInput = MultiValueInput;
-

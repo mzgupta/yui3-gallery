@@ -28,7 +28,13 @@
    border: 1px solid #CAD8F3;
    padding: 1px 5px 2px 5px;
    -moz-border-radius: 6px 6px 6px 6px;
+   -webkit-border-radius: 6px 6px 6px 6px;
+   -o-border-radius: 6px 6px 6px 6px;
    padding-right: 15px;
+}
+
+.yui3-skin-sam  li.yui3-multivalueinput-pendingdelete{
+   background-color: #4173CC !important;
 }
 
 .yui3-skin-sam  li.yui3-multivalueinput-list a{
