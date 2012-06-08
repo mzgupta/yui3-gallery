@@ -122,12 +122,19 @@ Y.extend(MultiValueInput, Y.Plugin.Base,
 				if (this._host.ac) {
 					//If host has autocomplete plugged
 					this._host.ac.after("select", this._appendItem, this);
-					this._host.after("blur", function() {
-						this.set("value", "");
-					});
 				} else {
 					this._host.after("change", this._appendItem, this);
 				}
+				
+				this._host.after("blur", function() {
+					this._host.set("value", "");
+					this._divContent.removeClass("yui3-multivalueinput-border");
+				},this);
+
+				this._host.after("focus", function() {
+					this._host.set("value", "");
+					this._divContent.addClass("yui3-multivalueinput-border");
+				},this);
 
 			},
 			destructor : function() {
