@@ -328,4 +328,4 @@ Y.QueryBuilder.Calendar.prototype = {
 Y.QueryBuilder.plugin_mapping.calendar = Y.QueryBuilder.Calendar;
 
 
-}, '@VERSION@' ,{requires:['calendar','datatype-date','gallery-overlay-extras','gallery-querybuilder'], skinnable:true});
+}, '@VERSION@' ,{requires:['calendar','datatype-date','gallery-overlay-extras','gallery-querybuilder'], skinnable:false});
