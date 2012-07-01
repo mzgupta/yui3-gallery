@@ -14,6 +14,7 @@
 </head>
 <body class="yui3-skin-sam">
 	<input type='text' id="ac-input"></input>
+	<button id="btn">Value</button>
 	<script>
 YUI({debug:true}).use('autocomplete', 'autocomplete-filters', 'autocomplete-highlighters',"gallery-multivalue-input", function (Y) {
   var states = [
@@ -76,7 +77,7 @@ YUI({debug:true}).use('autocomplete', 'autocomplete-filters', 'autocomplete-high
 	    resultHighlighter: 'phraseMatch',
 	    source           : states
   })
-  node.plug(Y.MultiValueInput,{values:["Mayank"]});
+  node.plug(Y.MultiValueInput);
 });
 </script>
 </body>
