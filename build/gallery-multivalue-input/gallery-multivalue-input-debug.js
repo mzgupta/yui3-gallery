@@ -313,4 +313,4 @@ Y.extend(MultiValueInput, Y.Plugin.Base,
 Y.MultiValueInput = MultiValueInput;
 
 
-}, '@VERSION@' ,{requires:['plugin','substitute','node'], skinnable:true});
+}, 'gallery-2012.08.01-13-16' ,{requires:['plugin','substitute','node'], skinnable:true});

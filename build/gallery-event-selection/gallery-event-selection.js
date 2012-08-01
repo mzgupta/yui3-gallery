@@ -82,8 +82,7 @@ Y.Event.define('selectionchange', {
             Y.on('gesturemovestart', Y.bind(function(e) {
                 this._unpoll();
                 if (sub._selection) {
-                    sub._selection = '';
-                    sub._notifier.fire({selection: sub._selection, pageX: e.pageX, pageY: e.pageY});
+                    Y.later(0, this, this._checkSelectionChange, sub);
                 }
             }, this)),
             node[method]('gesturemovestart', function(e) {}, filter), // event-gesture bug
@@ -132,4 +131,4 @@ Y.Event.define('selectionchange', {
 });
 
 
-}, 'gallery-2012.06.06-19-59' ,{requires:['event-move'], skinnable:false});
+}, 'gallery-2012.07.18-13-22' ,{requires:['event-move'], skinnable:false});
