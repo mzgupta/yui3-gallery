@@ -69,7 +69,12 @@ Y.QueryBuilder.Calendar.prototype = {
 		// Input box one for first calendar
 		var dt_value1 = value[1] || var_config.start_date; 
 		var dt_value2 = value[2] || var_config.end_date;  
-		var visible   =   ~~(value[2] || op_list[0].multipleValue);
+		if(value[2]){
+			visible = true;
+		}
+		else {
+			visible = op_list[0].multipleValue;
+		}
 
 		value_cell1 = this._createCellValue(query_index, var_config, op_list,
 				value, dt_value1, true, 0);
