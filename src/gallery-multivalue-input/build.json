@@ -1,0 +1,11 @@
+{
+    "name": "gallery-multivalue-input",
+    "builds": {
+        "gallery-multivalue-input": {
+            "skinnable": "true",
+            "jsfiles": [
+                "multivalue-input.js"
+            ]
+        }
+    }
+}
