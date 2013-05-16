@@ -1,0 +1,13 @@
+{
+    "gallery-itsaviewmodel": {
+        "requires": [
+            "base-build",
+            "widget",
+            "view",
+            "template-micro",
+            "model",
+            "pluginhost-base"
+        ],
+        "skinnable": true
+    }
+}

@@ -1,4 +1,4 @@
-YUI.add('gallery-quickedit', function(Y) {
+YUI.add('gallery-quickedit', function (Y, NAME) {
 
 "use strict";
 
@@ -140,6 +140,30 @@ QuickEdit.ATTRS =
 	{
 		value:     [],
 		validator: Y.Lang.isArray
+	},
+
+	/**
+	 * @attribute includeAllRowsInChanges
+	 * @description If true, getChanges() returns a record for every row, even if the record is empty.  Set to false if you want getChanges() to only return records that contain data.
+	 * @type Boolean
+	 * @default true
+	 */
+	includeAllRowsInChanges:
+	{
+		value:     true,
+		validator: Y.Lang.isBoolean
+	},
+
+	/**
+	 * @attribute includeRowIndexInChanges
+	 * @description If true, getChanges() includes the row index in each record, using the _row_index key.
+	 * @type Boolean
+	 * @default false
+	 */
+	includeRowIndexInChanges:
+	{
+		value:     false,
+		validator: Y.Lang.isBoolean
 	}
 };
 
@@ -307,7 +331,7 @@ QuickEdit.copyDownFormatter = function(o, td)
 {
 	if (o.column.quickEdit.copyDown && o.rowIndex === 0)
 	{
-		return Y.Lang.sub('<button title="Copy down" class="{c}">&darr;</button>',
+		return Y.Lang.sub('<button type="button" title="Copy down" class="{c}">&darr;</button>',
 		{
 			c: QuickEdit.copy_down_button_class
 		});
@@ -401,7 +425,12 @@ function validateElements(
 	var count  = list.size();
 	for (var i=0; i<count; i++)
 	{
-		var e  = list.item(i);
+		var e = list.item(i);
+		if (!Y.DOM.hasClass(e, 'quickedit-field'))
+		{
+			continue;
+		}
+
 		var qe = this.column_map[ this._getColumnKey(e) ].quickEdit;
 		if (!qe)
 		{
@@ -482,9 +511,9 @@ Y.extend(QuickEdit, Y.Plugin.Base,
 //			this.saveEdit.push(col.editor);
 //			col.editor = null;
 
-			var qe  = col.quickEdit;
-			var qef = col.qeFormatter;
-			if (/*!col.hidden &&*/ (qe || qef))
+			var qe  = col.quickEdit,
+				qef = col.qeFormatter;
+			if (/* !col.hidden && */ (qe || qef))
 			{
 				var fn = null;
 				if (qe && Y.Lang.isFunction(qe.formatter))
@@ -573,8 +602,14 @@ Y.extend(QuickEdit, Y.Plugin.Base,
 	 * Return the changed values.  For each row, an object is created with
 	 * only the changed values.  The object keys are the column keys.  If
 	 * you need values from particular columns to be included always, even
-	 * if the value did not change, include the key "changesAlwaysInclude"
+	 * if the value did not change, include the key `changesAlwaysInclude`
 	 * in the plugin configuration and pass an array of column keys.
+	 * If you need the row indexes, configure `includeRowIndexInChanges`.
+	 * 
+	 * If you only want the records with changes, configure
+	 * `includeAllRowsInChanges` to be false.  For this to be useful, you
+	 * will need to configure either `changesAlwaysInclude` or
+	 * `includeRowIndexInChanges`.
 	 *
 	 * @method getChanges
 	 * @return {mixed} array of objects if all validations pass, false otherwise
@@ -586,8 +621,10 @@ Y.extend(QuickEdit, Y.Plugin.Base,
 			return false;
 		}
 
-		var changes       = [];
-		var alwaysInclude = this.get('changesAlwaysInclude');
+		var changes        = [],
+			always_include = this.get('changesAlwaysInclude'),
+			include_index  = this.get('includeRowIndexInChanges'),
+			include_all    = this.get('includeAllRowsInChanges');
 
 		var host      = this.get('host');
 		var rows      = host._tbodyNode.get('children');
@@ -595,8 +632,8 @@ Y.extend(QuickEdit, Y.Plugin.Base,
 		{
 			var list = rows.item(i).all('.quickedit-field');
 
-			var change = {};
-			changes.push(change);
+			var change  = {},
+				changed = false;
 
 			var field_count = list.size();
 			for (var j=0; j<field_count; j++)
@@ -611,13 +648,24 @@ Y.extend(QuickEdit, Y.Plugin.Base,
 						val !== (prev ? prev.toString() : ''))
 				{
 					change[key] = val;
+					changed     = true;
 				}
 			}
 
-			for (var j=0; j<alwaysInclude.length; j++)
+			if (changed || include_all)
 			{
-				var key     = alwaysInclude[j];
-				change[key] = rec.get(key);
+				for (var j=0; j<always_include.length; j++)
+				{
+					var key     = always_include[j];
+					change[key] = rec.get(key);
+				}
+
+				if (include_index)
+				{
+					change._row_index = i;
+				}
+
+				changes.push(change);
 			}
 		},
 		this);
@@ -758,4 +806,15 @@ Y.namespace("Plugin");
 Y.Plugin.DataTableQuickEdit = QuickEdit;
 
 
-}, 'gallery-2012.05.16-20-37' ,{skinnable:true, optional:['gallery-scrollintoview'], requires:['datatable-base','gallery-formmgr-css-validation','gallery-node-optimizations','gallery-funcprog']});
+}, 'gallery-2013.04.03-19-53', {
+    "skinnable": "true",
+    "requires": [
+        "datatable-base",
+        "gallery-formmgr-css-validation",
+        "gallery-node-optimizations",
+        "gallery-funcprog"
+    ],
+    "optional": [
+        "gallery-scrollintoview"
+    ]
+});
