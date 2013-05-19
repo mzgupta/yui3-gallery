@@ -2,6 +2,14 @@
     "name": "gallery-multivalue-input",
     "builds": {
         "gallery-multivalue-input": {
+        	"config": {
+                "skinnable": "true",
+                "requires": [
+                    "plugin",
+                    "substitute",
+                    "node"
+                ]
+            },
             "skinnable": "true",
             "jsfiles": [
                 "multivalue-input.js"
